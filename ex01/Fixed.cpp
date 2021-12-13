@@ -6,13 +6,14 @@
 /*   By: vgallois <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/10 17:41:06 by vgallois          #+#    #+#             */
-/*   Updated: 2021/12/10 18:14:11 by vgallois         ###   ########.fr       */
+/*   Updated: 2021/12/13 18:59:02 by vgallois         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Fixed.hpp"
 #include <string>
 #include <iostream>
+#include <math.h>
 
 Fixed::Fixed()
 {
@@ -32,16 +33,29 @@ Fixed::Fixed(const int i)
 	_value = i << frac;
 }
 
-Fixed::Fixed(cont float f)
+Fixed::Fixed(const float f)
+{
+	std::cout << "Float constructor called" << std::endl;
+	_value = (int)roundf((f * (1 << frac)));
+}
 
 Fixed::~Fixed()
 {
 	std::cout << "Destructor called" << std::endl;
 }
 
+int	Fixed::toInt(void) const
+{
+	return (_value >> frac);
+}
+
+float Fixed::toFloat(void) const
+{
+	return ((float)_value / (float)(1 << frac));
+}
+
 int	Fixed::getRawBits() const
 {
-	std::cout << "getRawBits member function called" << std::endl;
 	return (_value);
 }
 
@@ -57,4 +71,10 @@ Fixed	&Fixed::operator=(const Fixed &src)
 		return (*this);
 	this->_value = src.getRawBits();
 	return (*this);
+}
+
+std::ostream &operator<<(std::ostream &out, const Fixed &fixe)
+{
+	out << fixe.toFloat();
+	return (out);
 }
